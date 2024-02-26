@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Libro {
 
-    private int codigo;
+    private String codigo;
     private String autor;
     private String titulo;
     private int copias;
@@ -12,4 +12,10 @@ public class Libro {
     private String editorial;
 
 
+    public Libro(String codigo, String autor, String titulo, int copias) {
+        this.codigo = codigo;
+        this.autor = autor;
+        this.titulo = titulo;
+        this.copias = copias;
+    }
 }
