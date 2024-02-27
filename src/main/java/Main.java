@@ -9,7 +9,7 @@ public class Main {
 //        Biblioteca b = new Biblioteca();
         LectorTxt lt = new LectorTxt();
         try {
-            lt.leer("/home/alejandnro/Desktop/data.txt");
+            lt.leer("/home/alejandnro/Desktop/test.txt");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
