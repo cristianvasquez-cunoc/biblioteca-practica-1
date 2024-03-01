@@ -1,14 +1,10 @@
 package backend.lectortxt;
 
-import backend.Biblioteca;
-import backend.Estudiante;
-import backend.Libro;
-import backend.Prestamo;
+import backend.*;
+import backend.lectortxt.controllers.ControladorArchivoBinario;
 
 import java.io.*;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -51,8 +47,11 @@ public class LectorTxt {
             }
         }
 
-        System.out.printf("hola");
 
+        guardarObjetos(estudiantes);
+        guardarObjetos(libros);
+        guardarObjetos(prestamos);
+//        leerObjetos(estudiantes, 1);
 
     }
 
@@ -128,6 +127,61 @@ public class LectorTxt {
 
     }
 
-    ;
+    private void guardarObjetos(List<? extends Identificable> lista) {
+        ControladorArchivoBinario cab = new ControladorArchivoBinario();
+        for (Identificable objeto : lista) {
+
+            String nombreCarpeta = "";
+            String nombreArchivo = (objeto.getIdentificador() + ".bin");
+
+
+            if (objeto instanceof Estudiante) {
+                nombreCarpeta = "estudiantes";
+            } else if (objeto instanceof Libro) {
+                nombreCarpeta = "libros";
+            } else if (objeto instanceof Prestamo) {
+                nombreCarpeta = "prestamos";
+            }
+
+
+            File carpeta = new File(nombreCarpeta);
+            if (!carpeta.exists()) {
+                boolean creada = carpeta.mkdirs();
+                if (creada) {
+                    System.out.println("Carpeta creada exitosamente!");
+                } else {
+                    System.out.println("Error al crear carpeta.");
+                    break;
+                }
+            }
+
+            String rutaArchivo = nombreCarpeta + File.separator + nombreArchivo;
+            File archivo = new File(rutaArchivo);
+
+            if (!archivo.exists()) {
+
+                try {
+                    boolean creado = archivo.createNewFile();
+                    if (creado) {
+                        cab.escribirObjeto(rutaArchivo, objeto);
+                    }
+                } catch (IOException e) {
+                    System.out.println("Error al crear archivo." + rutaArchivo);
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println("El archivo " + rutaArchivo + " ya existe");
+            }
+        }
+    }
+
+    private void leerObjetos (List<? extends Identificable> lista, int tipoObjeto) {
+        ControladorArchivoBinario cab = new ControladorArchivoBinario();
+        String nombreCarpeta = (tipoObjeto == 1) ? "./estudiantes/" : (tipoObjeto == 2) ? "./libros/" : (tipoObjeto == 3) ? "./prestamos/" : "./";
+
+        for (Identificable objeto : lista) {
+            cab.leerObjeto(nombreCarpeta + File.separator + objeto.getIdentificador() + ".bin");
+        }
+    }
 
 }

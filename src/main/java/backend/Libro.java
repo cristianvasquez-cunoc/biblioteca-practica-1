@@ -1,8 +1,9 @@
 package backend;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Libro {
+public class Libro implements Serializable, Identificable{
 
     private String codigo;
     private String autor;
@@ -17,5 +18,10 @@ public class Libro {
         this.autor = autor;
         this.titulo = titulo;
         this.copias = copias;
+    }
+
+    @Override
+    public String getIdentificador() {
+        return codigo;
     }
 }
