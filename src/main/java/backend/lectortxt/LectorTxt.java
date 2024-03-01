@@ -1,6 +1,7 @@
 package backend.lectortxt;
 
 import backend.*;
+import backend.enums.TipoRegistroFallido;
 import backend.interfaces.Identificable;
 import backend.lectortxt.controllers.ControladorArchivoBinario;
 
@@ -53,7 +54,7 @@ public class LectorTxt {
             } catch (IOException e) {
                 // TODO: archivo no se pudo leer por alguna razon, vuelva a intentar
             } catch (RegistroFallidoException e) {
-                RegistroFallido rf = new RegistroFallido(e.getTextoError(), e.getMessage());
+                RegistroFallido rf = new RegistroFallido(e.getTextoError(), e.getMessage(), e.getTipo());
                 registroFallidos.add(rf);
             }
         }
@@ -76,14 +77,14 @@ public class LectorTxt {
         int carrera = Integer.parseInt(textoCarrera.split(":")[1]);
 
         if(biblioteca.existeObjeto(biblioteca.getEstudiantes(), carnet))
-            throw new RegistroFallidoException("El estudiante con el carnet " + carnet +" ya existe", textoCarnet);
+            throw new RegistroFallidoException("El estudiante con el carnet " + carnet +" ya existe", textoCarnet, TipoRegistroFallido.ESTUDIANTE.getCodigo());
 
         try {
             return new Estudiante(carnet, nombre, carrera);
         } catch (NumberFormatException e) {
-            throw new RegistroFallidoException("El carnet solo puede incluir numeros", textoCarnet);
+            throw new RegistroFallidoException("El carnet solo puede incluir numeros", textoCarnet, TipoRegistroFallido.ESTUDIANTE.getCodigo());
         } catch (IllegalArgumentException e) {
-            throw new RegistroFallidoException("No existe carrera con el código: " + carrera, textoCarrera);
+            throw new RegistroFallidoException("No existe carrera con el código: " + carrera, textoCarrera, TipoRegistroFallido.ESTUDIANTE.getCodigo());
         }
 
     }
@@ -99,13 +100,13 @@ public class LectorTxt {
         int cantidad = Integer.parseInt(textoCantidad.split(":")[1]);
 
         if (!Pattern.matches("\\d{3}-[A-Z]{3}", codigo))
-            throw new RegistroFallidoException("El codigo del libro es invalido", textoCodigo);
+            throw new RegistroFallidoException("El codigo del libro es invalido", textoCodigo, TipoRegistroFallido.LIBRO.getCodigo());
         // valida que el codigo sea valido ABC-123
         if(biblioteca.existeObjeto(biblioteca.getLibros(), codigo))
-            throw new RegistroFallidoException("El libro con el codigo " + codigo +" ya existe", textoCodigo);
+            throw new RegistroFallidoException("El libro con el codigo " + codigo +" ya existe", textoCodigo, TipoRegistroFallido.LIBRO.getCodigo());
 
         if (cantidad < 0)
-            throw new RegistroFallidoException("La cantidad de libros no puede ser negativa", textoCantidad);
+            throw new RegistroFallidoException("La cantidad de libros no puede ser negativa", textoCantidad, TipoRegistroFallido.LIBRO.getCodigo());
 
         return new Libro(codigo, autor, titulo, cantidad);
     }
@@ -125,19 +126,19 @@ public class LectorTxt {
             String fecha = textoFecha.split(":")[1];
 
             if (!Pattern.matches("\\d{3}-[A-Z]{3}", codigoLibro))
-                throw new RegistroFallidoException("El codigo del libro es invalido", textoCodigoLibro);
+                throw new RegistroFallidoException("El codigo del libro es invalido", textoCodigoLibro, TipoRegistroFallido.PRESTAMO.getCodigo());
 
             if (!Pattern.matches("\\d{4}-\\d{2}-\\d{2}", fecha))
-                throw new RegistroFallidoException("La fecha ingresada no esta en formato yyyy-mm-dd", textoFecha);
+                throw new RegistroFallidoException("La fecha ingresada no esta en formato yyyy-mm-dd", textoFecha, TipoRegistroFallido.PRESTAMO.getCodigo());
 
             if(!biblioteca.existeObjeto(biblioteca.getLibros(),codigoLibro))
-                throw new RegistroFallidoException("El codigo para este libro no existe", textoCodigoLibro);
+                throw new RegistroFallidoException("El codigo para este libro no existe", textoCodigoLibro, TipoRegistroFallido.PRESTAMO.getCodigo());
 
             if(!biblioteca.existeObjeto(biblioteca.getEstudiantes(),carnet))
-                throw new RegistroFallidoException("El estudiante con este carnet no existe", textoCarnet);
+                throw new RegistroFallidoException("El estudiante con este carnet no existe", textoCarnet, TipoRegistroFallido.PRESTAMO.getCodigo());
 
             if(LocalDate.parse(fecha).isAfter(LocalDate.now()))
-                throw new RegistroFallidoException("La fecha ingresada aun no ha pasado", textoFecha);
+                throw new RegistroFallidoException("La fecha ingresada aun no ha pasado", textoFecha, TipoRegistroFallido.PRESTAMO.getCodigo());
 
             Estudiante estudiante = biblioteca.getEstudianteByCarnet(carnet);
             if(estudiante.tienePrestamosDisponibles()){
@@ -145,14 +146,14 @@ public class LectorTxt {
                 estudiante.agregarPrestamo(prestamo);
                 return prestamo;
             } else {
-                throw new RegistroFallidoException("El estudiante con carnet " + carnet + " ya tiene 3 prestamos activos", textoCarnet);
+                throw new RegistroFallidoException("El estudiante con carnet " + carnet + " ya tiene 3 prestamos activos", textoCarnet, TipoRegistroFallido.PRESTAMO.getCodigo());
             }
 
 
         } catch (ParseException e) {
-            throw new RegistroFallidoException("La fecha ingresada es invalida", textoFecha);
+            throw new RegistroFallidoException("La fecha ingresada es invalida", textoFecha, TipoRegistroFallido.PRESTAMO.getCodigo());
         } catch (NumberFormatException e) {
-            throw new RegistroFallidoException("El carnet solo puede incluir numeros", textoCarnet);
+            throw new RegistroFallidoException("El carnet solo puede incluir numeros", textoCarnet, TipoRegistroFallido.PRESTAMO.getCodigo());
         }
 
 
