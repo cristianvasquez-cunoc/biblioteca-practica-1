@@ -1,9 +1,11 @@
 package backend;
 
+import backend.interfaces.Identificable;
+
 import java.io.Serializable;
 import java.util.Date;
 
-public class Libro implements Serializable, Identificable{
+public class Libro implements Serializable, Identificable {
 
     private String codigo;
     private String autor;

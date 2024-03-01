@@ -1,13 +1,14 @@
 package backend;
 
 import backend.enums.EstadoPrestamo;
+import backend.interfaces.Identificable;
 
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Prestamo implements Serializable, Identificable{
+public class Prestamo implements Serializable, Identificable {
 
     private String codigoLibro;
     private String carnet;

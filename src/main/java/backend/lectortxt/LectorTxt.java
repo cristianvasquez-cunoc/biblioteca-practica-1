@@ -1,10 +1,12 @@
 package backend.lectortxt;
 
 import backend.*;
+import backend.interfaces.Identificable;
 import backend.lectortxt.controllers.ControladorArchivoBinario;
 
 import java.io.*;
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -13,6 +15,11 @@ public class LectorTxt {
 
     private List<RegistroFallido> registroFallidos;
     private Biblioteca biblioteca;
+
+    public LectorTxt() {
+        biblioteca = new Biblioteca();
+        registroFallidos = new LinkedList<>();
+    }
 
     public void leer(String rutaArchivo) throws IOException {
 
@@ -25,6 +32,10 @@ public class LectorTxt {
         List<Libro> libros = new LinkedList<>();
         List<Estudiante> estudiantes = new LinkedList<>();
         List<Prestamo> prestamos = new LinkedList<>();
+
+        biblioteca.setEstudiantes(estudiantes);
+        biblioteca.setLibros(libros);
+        biblioteca.setPrestamos(prestamos);
 
         List<RegistroFallido> registroFallidos = new LinkedList<>();
 
@@ -51,11 +62,8 @@ public class LectorTxt {
         guardarObjetos(estudiantes);
         guardarObjetos(libros);
         guardarObjetos(prestamos);
-//        leerObjetos(estudiantes, 1);
 
     }
-
-    // TODO: Agregar registros fallidos para los carnets y codigos de libro repetidos
 
     public Estudiante crearEstudiante(BufferedReader br) throws IOException, RegistroFallidoException {
 
@@ -67,6 +75,9 @@ public class LectorTxt {
         String textoCarrera = br.readLine();
         int carrera = Integer.parseInt(textoCarrera.split(":")[1]);
 
+        if(biblioteca.existeObjeto(biblioteca.getEstudiantes(), carnet))
+            throw new RegistroFallidoException("El estudiante con el carnet " + carnet +" ya existe", textoCarnet);
+
         try {
             return new Estudiante(carnet, nombre, carrera);
         } catch (NumberFormatException e) {
@@ -74,6 +85,7 @@ public class LectorTxt {
         } catch (IllegalArgumentException e) {
             throw new RegistroFallidoException("No existe carrera con el código: " + carrera, textoCarrera);
         }
+
     }
 
     public Libro crearLibro(BufferedReader br) throws IOException, RegistroFallidoException {
@@ -89,6 +101,8 @@ public class LectorTxt {
         if (!Pattern.matches("\\d{3}-[A-Z]{3}", codigo))
             throw new RegistroFallidoException("El codigo del libro es invalido", textoCodigo);
         // valida que el codigo sea valido ABC-123
+        if(biblioteca.existeObjeto(biblioteca.getLibros(), codigo))
+            throw new RegistroFallidoException("El libro con el codigo " + codigo +" ya existe", textoCodigo);
 
         if (cantidad < 0)
             throw new RegistroFallidoException("La cantidad de libros no puede ser negativa", textoCantidad);
@@ -116,14 +130,31 @@ public class LectorTxt {
             if (!Pattern.matches("\\d{4}-\\d{2}-\\d{2}", fecha))
                 throw new RegistroFallidoException("La fecha ingresada no esta en formato yyyy-mm-dd", textoFecha);
 
-            return new Prestamo(codigoLibro, carnet, fecha);
+            if(!biblioteca.existeObjeto(biblioteca.getLibros(),codigoLibro))
+                throw new RegistroFallidoException("El codigo para este libro no existe", textoCodigoLibro);
+
+            if(!biblioteca.existeObjeto(biblioteca.getEstudiantes(),carnet))
+                throw new RegistroFallidoException("El estudiante con este carnet no existe", textoCarnet);
+
+            if(LocalDate.parse(fecha).isAfter(LocalDate.now()))
+                throw new RegistroFallidoException("La fecha ingresada aun no ha pasado", textoFecha);
+
+            Estudiante estudiante = biblioteca.getEstudianteByCarnet(carnet);
+            if(estudiante.tienePrestamosDisponibles()){
+                Prestamo prestamo = new Prestamo(codigoLibro, carnet, fecha);
+                estudiante.agregarPrestamo(prestamo);
+                return prestamo;
+            } else {
+                throw new RegistroFallidoException("El estudiante con carnet " + carnet + " ya tiene 3 prestamos activos", textoCarnet);
+            }
+
+
         } catch (ParseException e) {
             throw new RegistroFallidoException("La fecha ingresada es invalida", textoFecha);
         } catch (NumberFormatException e) {
             throw new RegistroFallidoException("El carnet solo puede incluir numeros", textoCarnet);
         }
 
-        // TODO: Agregar registros fallidos para prestamos cuyo estudiante o libro no exista y para fechas que aun no han pasado
 
     }
 

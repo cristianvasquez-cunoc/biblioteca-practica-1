@@ -1,4 +1,4 @@
-package backend;
+package backend.interfaces;
 
 public interface Identificable {
 

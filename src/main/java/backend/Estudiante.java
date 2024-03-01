@@ -1,8 +1,10 @@
 package backend;
 
 import backend.enums.Carrera;
+import backend.interfaces.Identificable;
 
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -18,6 +20,12 @@ public class Estudiante implements Serializable, Identificable {
         this.carnet = carnet;
         this.nombre = nombre;
         this.carrera = Carrera.getCarreraPorCodigo(codigoCarrera);
+        this.noPrestamosActivos = 0;
+        this.prestamos = new LinkedList<>();
+    }
+
+    public boolean tienePrestamosDisponibles() {
+        return noPrestamosActivos < Biblioteca.DIAS_PRESTAMO_MAXIMO;
     }
 
     public String getNombre() {
@@ -31,5 +39,10 @@ public class Estudiante implements Serializable, Identificable {
     @Override
     public String getIdentificador() {
         return carnet;
+    }
+
+    public void agregarPrestamo(Prestamo prestamo) {
+        prestamos.add(prestamo);
+        noPrestamosActivos++;
     }
 }

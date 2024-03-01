@@ -1,7 +1,7 @@
 package backend.lectortxt.controllers;
 
 import backend.Estudiante;
-import backend.Identificable;
+import backend.interfaces.Identificable;
 
 import java.io.*;
 
