@@ -130,4 +130,7 @@
       </item>
     </group>
   </component>
+  <component name="uidesigner-configuration">
+    <option name="DEFAULT_LAYOUT_MANAGER" value="FlowLayout" />
+  </component>
 </project>

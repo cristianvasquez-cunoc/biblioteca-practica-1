@@ -7,19 +7,6 @@ import java.io.*;
 
 public class ControladorArchivoBinario {
 
-//    public void escribirEstudiante(String nombreArchivo, Estudiante estudiante){
-//        try {
-//            File file = new File(nombreArchivo);
-//            FileOutputStream fileOutputStream = new FileOutputStream(file);
-//            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-//            objectOutputStream.writeObject(estudiante);
-//            objectOutputStream.close();
-//            System.out.println("Estudiante agregado " + nombreArchivo);
-//        } catch (IOException e) {
-//            System.out.println("Archivo no encontrado");
-//        }
-//    }
-
     public void escribirObjeto(String nombreArchivo, Object objeto){
         try {
             File file = new File(nombreArchivo);
@@ -33,22 +20,7 @@ public class ControladorArchivoBinario {
         }
     }
 
-    public void leerEstudiante(String nombreArchivo){
-        try {
-            File file = new File(nombreArchivo);
-            FileInputStream fileInputStream = new FileInputStream(file);
-            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-            Estudiante estudiante = (Estudiante) objectInputStream.readObject();
-            System.out.println(estudiante.getIdentificador() + estudiante.getNombre() + estudiante.getCarrera());
-            objectInputStream.close();
-        } catch (IOException e) {
-            System.out.println("Archivo no encontrado");
-        } catch (ClassNotFoundException e) {
-            System.out.println("Clase no encontrada");
-        }
-    }
-
-    public void leerObjeto(String nombreArchivo){
+    public Identificable leerObjeto(String nombreArchivo){
         try {
             File file = new File(nombreArchivo);
             FileInputStream fileInputStream = new FileInputStream(file);
@@ -56,10 +28,12 @@ public class ControladorArchivoBinario {
             Identificable objeto = (Identificable) objectInputStream.readObject();
             System.out.println(objeto.getIdentificador());
             objectInputStream.close();
+            return objeto;
         } catch (IOException e) {
             System.out.println("Archivo no encontrado");
         } catch (ClassNotFoundException e) {
             System.out.println("Clase no encontrada");
         }
+        return null;
     }
 }

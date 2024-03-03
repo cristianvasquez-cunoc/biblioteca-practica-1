@@ -12,4 +12,16 @@ public class RegistroFallido {
         this.error = error;
         this.tipo = TipoRegistroFallido.getTipoRegistroFallidoByCodigo(codigo);
     }
+
+    public String getTexto() {
+        return texto;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public TipoRegistroFallido getTipo() {
+        return tipo;
+    }
 }
