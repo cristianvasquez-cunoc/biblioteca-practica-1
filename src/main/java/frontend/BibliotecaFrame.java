@@ -54,7 +54,6 @@ public class BibliotecaFrame extends JFrame {
         importar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: Abrir explorador de archivos para seleccionar .txt a leer
 
                 JFileChooser chooser = new JFileChooser();
                 FileNameExtensionFilter filter = new FileNameExtensionFilter(
@@ -76,6 +75,30 @@ public class BibliotecaFrame extends JFrame {
                         throw new RuntimeException(ex);
                     }
                 }
+            }
+        });
+
+        registroEstudiante.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                RegistrarEstudiantePanel pane = new RegistrarEstudiantePanel();
+                mainPanel.remove(1);
+                mainPanel.add(pane);
+
+                revalidate();
+                repaint();
+            }
+        });
+
+        registroLibro.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                RegistrarLibroPanel pane = new RegistrarLibroPanel();
+                mainPanel.remove(1);
+                mainPanel.add(pane);
+
+                revalidate();
+                repaint();
             }
         });
     }

@@ -26,7 +26,6 @@ public class ControladorArchivoBinario {
             FileInputStream fileInputStream = new FileInputStream(file);
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
             Identificable objeto = (Identificable) objectInputStream.readObject();
-            System.out.println(objeto.getIdentificador());
             objectInputStream.close();
             return objeto;
         } catch (IOException e) {
