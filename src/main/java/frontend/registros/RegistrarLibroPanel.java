@@ -1,7 +1,21 @@
 package frontend.registros;
 
+import backend.Biblioteca;
+import backend.Estudiante;
+import backend.Libro;
+import backend.enums.TipoRegistroFallido;
+import backend.lectortxt.LectorTxt;
+import backend.lectortxt.RegistroFallidoException;
+import backend.lectortxt.controllers.ControladorArchivoBinario;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import java.util.regex.Pattern;
 
 public class RegistrarLibroPanel extends JPanel {
     private JLabel titulo;
@@ -24,10 +38,85 @@ public class RegistrarLibroPanel extends JPanel {
     private JPanel textFieldsPane;
     private JButton agregarBoton;
 
-    public RegistrarLibroPanel() {
+    private Biblioteca biblioteca;
+
+    public RegistrarLibroPanel(Biblioteca biblioteca, LectorTxt lectorTxt) {
+        this.biblioteca = biblioteca;
+
         construirJPanel();
 
-        agregarBoton.addActionListener(e -> System.out.println("Boton presionado"));
+        agregarBoton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    ControladorArchivoBinario cab = new ControladorArchivoBinario();
+                    Libro libro = registrarLibro();
+                    lectorTxt.guardarObjeto(libro, cab);
+                    JOptionPane.showMessageDialog(getParent(), "El libro se agrego exitosamente", "Libro agregado", JOptionPane.INFORMATION_MESSAGE);
+                    codigoField.setText("");
+                    autorField.setText("");
+                    tituloField.setText("");
+                    cantidadField.setText("");
+                    fechaPublicacionField.setText("");
+                    editorialField.setText("");
+                } catch (RegistroFallidoMensajeException ex) {
+                    JOptionPane.showMessageDialog(getParent(), ex.getMessage(), "Error al agregar libro", JOptionPane.WARNING_MESSAGE);
+                }
+
+            }
+        });
+    }
+
+    private Libro registrarLibro() throws RegistroFallidoMensajeException {
+
+        String codigo = codigoField.getText();
+        String autor = autorField.getText();
+        String titulo = tituloField.getText();
+        String cantidad = cantidadField.getText();
+        String fechaPublicacion = fechaPublicacionField.getText();
+        String editorial = editorialField.getText();
+
+
+        if (codigo.isBlank())
+            throw new RegistroFallidoMensajeException("El codigo no puede estar vacio");
+        if (autor.isBlank())
+            throw new RegistroFallidoMensajeException("El autor no puede estar vacio");
+        if (titulo.isBlank())
+            throw new RegistroFallidoMensajeException("El titulo no puede estar vacio");
+        if (cantidad.isBlank())
+            throw new RegistroFallidoMensajeException("La cantidad de copias no puede estar vacio");
+        if (biblioteca.existeObjeto(biblioteca.getLibros(), codigo))
+            throw new RegistroFallidoMensajeException("El libro con codigo " + codigo + " ya existe, por favor ingrese otro");
+        if (!Pattern.matches("\\d{3}-[A-Z]{3}", codigo))
+            throw new RegistroFallidoMensajeException("El codigo del libro es invalido");
+
+        int cantidadNumero;
+        try {
+            cantidadNumero = Integer.parseInt(cantidad);
+            if (cantidadNumero < 0) throw new NumberFormatException();
+        } catch (NumberFormatException e) {
+            throw new RegistroFallidoMensajeException("La cantidad debe ser un numero positivo");
+        }
+
+
+        try {
+            Libro libro;
+
+            if (fechaPublicacion.isBlank() && editorial.isBlank())
+                libro = new Libro(codigo, autor, titulo, cantidadNumero);
+            else {
+                if (!fechaPublicacion.isBlank() && LocalDate.parse(fechaPublicacion).isAfter(LocalDate.now()))
+                    throw new RegistroFallidoMensajeException("La fecha ingresada aun no ha pasado");
+                libro = new Libro(codigo, autor, titulo, cantidadNumero, fechaPublicacion, editorial);
+            }
+
+            return libro;
+
+        } catch (DateTimeParseException | ParseException e) {
+            throw new RegistroFallidoMensajeException("La fecha ingresada no es valida, por favor ingrese una en formato yyyy-mm-dd");
+        }
+
+
     }
 
     private void construirJPanel() {
@@ -100,25 +189,25 @@ public class RegistrarLibroPanel extends JPanel {
         textFieldsPane.add(codigoTexto);
         textFieldsPane.add(codigoField);
         textFieldsPane.add(codigoFormato);
-        gap(0,16);
+        gap(0, 16);
 
         textFieldsPane.add(autorTexto);
         textFieldsPane.add(autorField);
-        gap(0,16);
+        gap(0, 16);
 
         textFieldsPane.add(tituloTexto);
         textFieldsPane.add(tituloField);
-        gap(0,16);
+        gap(0, 16);
 
         textFieldsPane.add(cantidadTexto);
         textFieldsPane.add(cantidadField);
         textFieldsPane.add(cantidadFormato);
-        gap(0,16);
+        gap(0, 16);
 
         textFieldsPane.add(fechaPublicacionTexto);
         textFieldsPane.add(fechaPublicacionField);
         textFieldsPane.add(fechaPublicacionFormato);
-        gap(0,16);
+        gap(0, 16);
 
         textFieldsPane.add(editorialTexto);
         textFieldsPane.add(editorialField);

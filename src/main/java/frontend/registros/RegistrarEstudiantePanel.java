@@ -34,7 +34,6 @@ public class RegistrarEstudiantePanel extends JPanel {
     private JButton agregarBoton;
 
     private Biblioteca biblioteca;
-    private LectorTxt lectorTxt;
 
     public RegistrarEstudiantePanel(Biblioteca biblioteca, LectorTxt lectorTxt) {
 
@@ -154,7 +153,6 @@ public class RegistrarEstudiantePanel extends JPanel {
         String nombre = nombreField.getText();
         String codigoCarreraTexto = codigoCarreraField.getText();
         String fechaNacimiento = fechaNacimientoField.getText();
-        int codigoCarrera;
 
         if (carnet.isBlank())
             throw new RegistroFallidoMensajeException("El carnet no puede estar vacio");
@@ -164,6 +162,7 @@ public class RegistrarEstudiantePanel extends JPanel {
         if (biblioteca.existeObjeto(biblioteca.getEstudiantes(), carnet))
             throw new RegistroFallidoMensajeException("El estudiante con carnet " + carnet + " ya existe, por favor ingrese otro");
 
+        int codigoCarrera;
         try {
             codigoCarrera = Integer.parseInt(codigoCarreraTexto);
 

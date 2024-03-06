@@ -95,7 +95,7 @@ public class BibliotecaFrame extends JFrame {
         registroLibro.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                RegistrarLibroPanel pane = new RegistrarLibroPanel();
+                RegistrarLibroPanel pane = new RegistrarLibroPanel(biblioteca, lector);
                 mainPanel.remove(1);
                 mainPanel.add(pane);
 
