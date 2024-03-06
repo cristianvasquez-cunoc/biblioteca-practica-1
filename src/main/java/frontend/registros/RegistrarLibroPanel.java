@@ -1,4 +1,4 @@
-package frontend;
+package frontend.registros;
 
 import javax.swing.*;
 import java.awt.*;

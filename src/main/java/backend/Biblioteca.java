@@ -13,11 +13,6 @@ public class Biblioteca {
 
     public static final int DIAS_PRESTAMO_MAXIMO = 3;
 
-
-
-    private void registrarEstudiante() {}
-    private void registrarLibro() {}
-    private void registrarPrestamo() {}
     private void calcularDineroPrestado() {}
 
 

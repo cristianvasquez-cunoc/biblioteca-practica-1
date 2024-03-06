@@ -4,6 +4,9 @@ import backend.enums.Carrera;
 import backend.interfaces.Identificable;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,6 +18,7 @@ public class Estudiante implements Serializable, Identificable {
     private Carrera carrera;
     private List<Prestamo> prestamos;
     private int noPrestamosActivos;
+    private Date fechaNacimiento;
 
     public Estudiante(String carnet, String nombre, int codigoCarrera) {
         this.carnet = carnet;
@@ -22,6 +26,15 @@ public class Estudiante implements Serializable, Identificable {
         this.carrera = Carrera.getCarreraPorCodigo(codigoCarrera);
         this.noPrestamosActivos = 0;
         this.prestamos = new LinkedList<>();
+    }
+
+    public Estudiante(String carnet, String nombre, int codigoCarrera, String fechaNacimiento) throws ParseException {
+        this.carnet = carnet;
+        this.nombre = nombre;
+        this.carrera = Carrera.getCarreraPorCodigo(codigoCarrera);
+        this.noPrestamosActivos = 0;
+        this.prestamos = new LinkedList<>();
+        this.fechaNacimiento = new SimpleDateFormat("yyyy-MM-dd").parse(fechaNacimiento);
     }
 
     public boolean tienePrestamosDisponibles() {

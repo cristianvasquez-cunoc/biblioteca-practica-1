@@ -6,6 +6,8 @@ import backend.Libro;
 import backend.Prestamo;
 import backend.lectortxt.LectorTxt;
 import backend.lectortxt.RegistroFallido;
+import frontend.registros.RegistrarEstudiantePanel;
+import frontend.registros.RegistrarLibroPanel;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -81,7 +83,7 @@ public class BibliotecaFrame extends JFrame {
         registroEstudiante.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                RegistrarEstudiantePanel pane = new RegistrarEstudiantePanel();
+                RegistrarEstudiantePanel pane = new RegistrarEstudiantePanel(biblioteca, lector);
                 mainPanel.remove(1);
                 mainPanel.add(pane);
 
