@@ -27,6 +27,14 @@ public class Prestamo implements Serializable, Identificable {
         this.estado = EstadoPrestamo.PENDIENTE;
     }
 
+    public String getCarnet() {
+        return carnet;
+    }
+
+    public Date getFecha() {
+        return fecha;
+    }
+
     @Override
     public String getIdentificador() {
         return codigoLibro + carnet + fecha.getTime();

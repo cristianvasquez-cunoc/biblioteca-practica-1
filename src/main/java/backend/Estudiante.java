@@ -53,6 +53,10 @@ public class Estudiante implements Serializable, Identificable {
         return noPrestamosActivos;
     }
 
+    public List<Prestamo> getPrestamos() {
+        return prestamos;
+    }
+
     @Override
     public String getIdentificador() {
         return carnet;
