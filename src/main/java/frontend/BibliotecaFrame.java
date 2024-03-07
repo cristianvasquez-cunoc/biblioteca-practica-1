@@ -7,6 +7,7 @@ import backend.Prestamo;
 import backend.lectortxt.LectorTxt;
 import backend.lectortxt.RegistroFallido;
 import frontend.datos.DatosEstudiantePanel;
+import frontend.datos.DatosLibroPanel;
 import frontend.registros.RegistrarEstudiantePanel;
 import frontend.registros.RegistrarLibroPanel;
 
@@ -78,6 +79,14 @@ public class BibliotecaFrame extends JFrame {
                         throw new RuntimeException(ex);
                     }
                 }
+            }
+        });
+
+        datosLibro.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DatosLibroPanel pane = new DatosLibroPanel(libros);
+                cambiarMainPanel(pane);
             }
         });
 

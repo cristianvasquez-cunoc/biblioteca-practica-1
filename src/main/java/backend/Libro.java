@@ -36,6 +36,30 @@ public class Libro implements Serializable, Identificable {
 
     }
 
+    public String getAutor() {
+        return autor;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public int getCopias() {
+        return copias;
+    }
+
+    public String getFechaPublicacion() {
+        try {
+            return new SimpleDateFormat("yyyy-mm-dd").format(fechaPublicacion);
+        } catch (Exception exception) {
+            return "";
+        }
+    }
+
+    public String getEditorial() {
+        return editorial;
+    }
+
     @Override
     public String getIdentificador() {
         return codigo;
