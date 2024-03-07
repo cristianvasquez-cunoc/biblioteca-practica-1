@@ -6,6 +6,7 @@ import backend.Libro;
 import backend.Prestamo;
 import backend.lectortxt.LectorTxt;
 import backend.lectortxt.RegistroFallido;
+import frontend.datos.DatosEstudiantePanel;
 import frontend.registros.RegistrarEstudiantePanel;
 import frontend.registros.RegistrarLibroPanel;
 
@@ -80,15 +81,19 @@ public class BibliotecaFrame extends JFrame {
             }
         });
 
+        datosEstudiante.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DatosEstudiantePanel pane = new DatosEstudiantePanel(estudiantes);
+                cambiarMainPanel(pane);
+            }
+        });
+
         registroEstudiante.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 RegistrarEstudiantePanel pane = new RegistrarEstudiantePanel(biblioteca, lector);
-                mainPanel.remove(1);
-                mainPanel.add(pane);
-
-                revalidate();
-                repaint();
+                cambiarMainPanel(pane);
             }
         });
 
@@ -96,12 +101,16 @@ public class BibliotecaFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 RegistrarLibroPanel pane = new RegistrarLibroPanel(biblioteca, lector);
-                mainPanel.remove(1);
-                mainPanel.add(pane);
-
-                revalidate();
-                repaint();
+                cambiarMainPanel(pane);
             }
         });
+    }
+
+    private void cambiarMainPanel (JPanel pane){
+        mainPanel.remove(1);
+        mainPanel.add(pane);
+
+        revalidate();
+        repaint();
     }
 }
