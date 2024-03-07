@@ -8,6 +8,7 @@ import backend.lectortxt.LectorTxt;
 import backend.lectortxt.RegistroFallido;
 import frontend.datos.DatosEstudiantePanel;
 import frontend.datos.DatosLibroPanel;
+import frontend.prestamos.RealizarPrestamoPanel;
 import frontend.registros.RegistrarEstudiantePanel;
 import frontend.registros.RegistrarLibroPanel;
 
@@ -110,6 +111,14 @@ public class BibliotecaFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 RegistrarLibroPanel pane = new RegistrarLibroPanel(biblioteca, lector);
+                cambiarMainPanel(pane);
+            }
+        });
+
+        realizar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                RealizarPrestamoPanel pane = new RealizarPrestamoPanel(biblioteca, lector);
                 cambiarMainPanel(pane);
             }
         });

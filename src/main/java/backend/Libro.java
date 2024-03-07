@@ -64,4 +64,8 @@ public class Libro implements Serializable, Identificable {
     public String getIdentificador() {
         return codigo;
     }
+
+    public void prestarLibro() {
+        copias--;
+    }
 }
