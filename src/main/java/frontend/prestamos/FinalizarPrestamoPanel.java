@@ -2,15 +2,20 @@ package frontend.prestamos;
 
 import backend.Biblioteca;
 import backend.Estudiante;
+import backend.Libro;
 import backend.Prestamo;
 import backend.interfaces.Identificable;
 import backend.lectortxt.LectorTxt;
+import backend.lectortxt.RegistroFallidoException;
 import frontend.registros.RegistroFallidoMensajeException;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class FinalizarPrestamoPanel extends JPanel {
@@ -32,6 +37,8 @@ public class FinalizarPrestamoPanel extends JPanel {
     private Biblioteca biblioteca;
     private LectorTxt lectorTxt;
 
+    private JLabel fechaPrestamo;
+    private JLabel fechaActual;
     private JLabel cargoMoraText;
     private JLabel cargoDiasPrestadosText;
     private JLabel totalText;
@@ -39,6 +46,11 @@ public class FinalizarPrestamoPanel extends JPanel {
     private int cargoTotalMora;
     private int cargoDiasPrestados;
     private int total;
+
+
+    private Prestamo prestamoEncontrado;
+    private Estudiante estudianteEncontrado;
+    private Libro libroEncontrado;
 
     public FinalizarPrestamoPanel(Biblioteca biblioteca, LectorTxt lectorTxt) {
         this.biblioteca = biblioteca;
@@ -57,9 +69,23 @@ public class FinalizarPrestamoPanel extends JPanel {
             }
         });
 
+        finalizarPrestamoBoton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    finalizarPrestamo();
+                    JOptionPane.showMessageDialog(getParent(), "El prestamo se ha finalizado exitosamente", "Prestamo finalizado", JOptionPane.INFORMATION_MESSAGE);
+                } catch (RegistroFallidoMensajeException ex) {
+                    JOptionPane.showMessageDialog(getParent(), ex.getMessage(), "Error al finalizar prestamo", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+        });
+
     }
 
-    public void crearPanel () {
+    // todo: mostrar datos del prestamo
+
+    public void crearPanel() {
         titulo = new JLabel("Finalizar Prestamo");
         titulo.setFont(getFuenteConTamano(24));
         titulo.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 0));
@@ -98,6 +124,10 @@ public class FinalizarPrestamoPanel extends JPanel {
         JPanel prestamoInformacionPanel = new JPanel();
         JLabel subtitulo = new JLabel("Informacion del prestamo: ");
         subtitulo.setFont(getFuenteConTamano(20));
+        fechaPrestamo = new JLabel("Fecha del prestamo: ");
+        fechaPrestamo.setFont(getFuenteConTamano(14));
+        fechaActual = new JLabel("Fecha actual: ");
+        fechaActual.setFont(getFuenteConTamano(14));
         cargoMoraText = new JLabel("Cargo total de mora: ");
         cargoMoraText.setFont(getFuenteConTamano(14));
         cargoDiasPrestadosText = new JLabel("Cargos por dias prestados: ");
@@ -136,6 +166,10 @@ public class FinalizarPrestamoPanel extends JPanel {
 
         prestamoInformacionPanel.setLayout(new BoxLayout(prestamoInformacionPanel, BoxLayout.Y_AXIS));
         prestamoInformacionPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        prestamoInformacionPanel.add(fechaActual);
+        prestamoInformacionPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        prestamoInformacionPanel.add(fechaPrestamo);
+        prestamoInformacionPanel.add(Box.createRigidArea(new Dimension(0, 5)));
         prestamoInformacionPanel.add(cargoMoraText);
         prestamoInformacionPanel.add(Box.createRigidArea(new Dimension(0, 5)));
         prestamoInformacionPanel.add(cargoDiasPrestadosText);
@@ -152,6 +186,28 @@ public class FinalizarPrestamoPanel extends JPanel {
         borderPanelPrestamoInformacion.add(borderAgregarBoton, BorderLayout.SOUTH);
     }
 
+    public void finalizarPrestamo() throws RegistroFallidoMensajeException {
+
+        if (carnetField.getText().isBlank() || codigoLibroField.getText().isBlank())
+            throw new RegistroFallidoMensajeException("Por favor llena los campos necesarios");
+        if (estudianteEncontrado == null || libroEncontrado == null)
+            throw new RegistroFallidoMensajeException("Por favor asegurate que el sistema encuentre un prestamo");
+
+        prestamoEncontrado.finalizar(total, estudianteEncontrado, libroEncontrado);
+
+        carnetField.setText("");
+        codigoLibroField.setText("");
+        fechaPrestamo.setText("Fecha del prestamo:");
+        fechaActual.setText("Fecha actual:");
+        cargoMoraText.setText("Cargo total por mora:");
+        cargoDiasPrestadosText.setText("Cargo por dias del prestamo");
+        totalText.setText("Total: ");
+
+        File file = new File("./prestamos/" + prestamoEncontrado.getIdentificador() + ".bin");
+        file.delete();
+
+    }
+
     public void buscarInformacionPrestamo() throws RegistroFallidoMensajeException {
         String codigo = codigoLibroField.getText();
         String carnet = carnetField.getText();
@@ -161,30 +217,43 @@ public class FinalizarPrestamoPanel extends JPanel {
         if (codigo.isBlank())
             throw new RegistroFallidoMensajeException("El codigo del libro no puede estar vacio");
 
-        if(biblioteca.existeObjeto(biblioteca.getEstudiantes(), carnet)) {
+        if (biblioteca.existeObjeto(biblioteca.getEstudiantes(), carnet)) {
             Estudiante estudiante = null;
-            for(Estudiante est : biblioteca.getEstudiantes()) {
-                if(est.getIdentificador().equals(carnet)) estudiante = est;
+            for (Estudiante est : biblioteca.getEstudiantes()) {
+                if (est.getIdentificador().equals(carnet)) estudiante = est;
             }
+            estudianteEncontrado = estudiante;
 
             List<Prestamo> prestamos = estudiante.getPrestamos();
             Prestamo prestamo = null;
-            for(Prestamo prest : prestamos) {
-                if(prest.getCarnet().equals(codigo)) prestamo = prest;
+            for (Prestamo prest : prestamos) {
+                if (prest.getCodigoLibro().equals(codigo)) {
+                    prestamo = prest;
+                    for (Libro libro : biblioteca.getLibros()) {
+                        if (prestamo.getCodigoLibro().equals(libro.getIdentificador())) libroEncontrado = libro;
+                    }
+                }
             }
-
-            if(prestamo == null)
+            if (prestamo == null)
                 throw new RegistroFallidoMensajeException("El estudiante no ha prestado el libro con codigo: " + codigo);
 
-            int diasExtras = (int) ((System.currentTimeMillis() - prestamo.getFecha().getTime()) / (1000 * 60 * 60 * 24));
+            prestamoEncontrado = prestamo;
+
+            fechaPrestamo.setText("Fecha del prestamo: " + new SimpleDateFormat("yyyy-MM-dd").format(prestamoEncontrado.getFecha()));
+            fechaActual.setText("Fecha actual: " + new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+
+            int diasExtras = (int) ((System.currentTimeMillis() - prestamo.getFecha().getTime()) / (1000 * 60 * 60 * 24)) - 3;
             cargoTotalMora = diasExtras > 0 ? diasExtras * 10 : 0;
-            cargoMoraText.setText("Cargo total de mora: " + cargoTotalMora);
+            cargoMoraText.setText("Cargo total de mora (" + diasExtras +" * 10): Q" + cargoTotalMora + ".00");
 
-            cargoDiasPrestados = diasExtras + 3;
-            cargoDiasPrestadosText.setText("Cargos por dias prestados: " + cargoDiasPrestados * 5);
-            totalText.setText("Total: " + cargoTotalMora );
+            cargoDiasPrestados = (diasExtras + 3) * 5;
+            cargoDiasPrestadosText.setText("Cargos por dias prestados (" + (diasExtras + 3) + " * 5): Q" + cargoDiasPrestados + ".00");
 
-        }else {
+            total = cargoTotalMora + cargoDiasPrestados;
+            totalText.setText("Total: Q" + total + ".00");
+
+
+        } else {
             throw new RegistroFallidoMensajeException("El estudiante con ese carnet no existe");
         }
     }

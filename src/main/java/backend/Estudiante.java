@@ -66,4 +66,9 @@ public class Estudiante implements Serializable, Identificable {
         prestamos.add(prestamo);
         noPrestamosActivos++;
     }
+
+    public void finalizarPrestamo(Prestamo prestamo) {
+        noPrestamosActivos--;
+        prestamos.remove(prestamo);
+    }
 }

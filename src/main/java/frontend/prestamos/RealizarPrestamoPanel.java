@@ -223,6 +223,7 @@ public class RealizarPrestamoPanel extends JPanel {
                 ControladorArchivoBinario cab = new ControladorArchivoBinario();
                 cab.escribirObjeto(nombreArchivoPrestamo, prestamo);
                 cab.escribirObjeto(nombreArchivoEstudiante, estudiante);
+                cab.escribirObjeto("./libros/" + libro.getIdentificador() + ".bin", libro);
             } else
                 throw new RegistroFallidoMensajeException("El estudiante con carnet " + carnet + " ya tiene 3 prestamos activos");
 

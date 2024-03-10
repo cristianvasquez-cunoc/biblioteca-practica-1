@@ -2,10 +2,12 @@ package backend;
 
 import backend.enums.EstadoPrestamo;
 import backend.interfaces.Identificable;
+import backend.lectortxt.controllers.ControladorArchivoBinario;
 
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Prestamo implements Serializable, Identificable {
@@ -33,6 +35,23 @@ public class Prestamo implements Serializable, Identificable {
 
     public Date getFecha() {
         return fecha;
+    }
+
+    public void finalizar(int total, Estudiante estudiante, Libro libro) {
+        fechaFin = new Date();
+        estado = EstadoPrestamo.FINALIZADO;
+        dineroTotal = total;
+        libro.devolverLibro();
+        estudiante.finalizarPrestamo(this);
+
+        //actualizar archivos
+        ControladorArchivoBinario cab = new ControladorArchivoBinario();
+        cab.escribirObjeto("./libros/" + libro.getIdentificador() + ".bin", libro);
+        cab.escribirObjeto("./estudiantes/" + estudiante.getIdentificador() + ".bin", estudiante);
+    }
+
+    public String getCodigoLibro() {
+        return codigoLibro;
     }
 
     @Override

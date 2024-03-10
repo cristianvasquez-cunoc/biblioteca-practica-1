@@ -68,4 +68,8 @@ public class Libro implements Serializable, Identificable {
     public void prestarLibro() {
         copias--;
     }
+
+    public void devolverLibro() {
+        copias++;
+    }
 }
