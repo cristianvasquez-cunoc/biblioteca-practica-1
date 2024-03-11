@@ -50,7 +50,7 @@ public class Libro implements Serializable, Identificable {
 
     public String getFechaPublicacion() {
         try {
-            return new SimpleDateFormat("yyyy-mm-dd").format(fechaPublicacion);
+            return new SimpleDateFormat("yyyy-MM-dd").format(fechaPublicacion);
         } catch (Exception exception) {
             return "";
         }

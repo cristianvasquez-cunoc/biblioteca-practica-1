@@ -12,6 +12,7 @@ import frontend.prestamos.FinalizarPrestamoPanel;
 import frontend.prestamos.RealizarPrestamoPanel;
 import frontend.registros.RegistrarEstudiantePanel;
 import frontend.registros.RegistrarLibroPanel;
+import frontend.reportes.Reportes1;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -37,6 +38,12 @@ public class BibliotecaFrame extends JFrame {
     private JMenuItem realizar;
     private JMenuItem finalizar;
     private JMenu reportes;
+    private JMenuItem reportes1;
+    private JMenuItem reportes2;
+    private JMenuItem reportes3;
+    private JMenuItem reportes4;
+    private JMenuItem reportes5;
+    private JMenuItem reportes6;
 
     private Biblioteca biblioteca;
 
@@ -128,6 +135,14 @@ public class BibliotecaFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 FinalizarPrestamoPanel pane = new FinalizarPrestamoPanel(biblioteca, lector);
+                cambiarMainPanel(pane);
+            }
+        });
+
+        reportes1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Reportes1 pane = new Reportes1(biblioteca);
                 cambiarMainPanel(pane);
             }
         });

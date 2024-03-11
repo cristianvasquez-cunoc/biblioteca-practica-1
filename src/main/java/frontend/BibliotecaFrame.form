@@ -111,14 +111,62 @@
               </grid>
             </children>
           </grid>
-          <grid id="1b0b" class="javax.swing.JMenu" binding="reportes" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-            <margin top="0" left="0" bottom="0" right="0"/>
+          <grid id="1b0b" class="javax.swing.JMenu" binding="reportes" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
             <constraints/>
             <properties>
               <text value="Reportes"/>
             </properties>
             <border type="none"/>
-            <children/>
+            <children>
+              <grid id="28e33" class="javax.swing.JMenuItem" binding="reportes1" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+                <constraints/>
+                <properties>
+                  <text value="Libros que se entregan hoy"/>
+                </properties>
+                <border type="none"/>
+                <children/>
+              </grid>
+              <grid id="ceab2" class="javax.swing.JMenuItem" binding="reportes2" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+                <constraints/>
+                <properties>
+                  <text value="Libros en mora"/>
+                </properties>
+                <border type="none"/>
+                <children/>
+              </grid>
+              <grid id="9a4c8" class="javax.swing.JMenuItem" binding="reportes3" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+                <constraints/>
+                <properties>
+                  <text value="Total dinero recaudado"/>
+                </properties>
+                <border type="none"/>
+                <children/>
+              </grid>
+              <grid id="c7d40" class="javax.swing.JMenuItem" binding="reportes4" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+                <constraints/>
+                <properties>
+                  <text value="Prestamos por estudiante"/>
+                </properties>
+                <border type="none"/>
+                <children/>
+              </grid>
+              <grid id="cc7e1" class="javax.swing.JMenuItem" binding="reportes5" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+                <constraints/>
+                <properties>
+                  <text value="Prestamos actuales a estudiante"/>
+                </properties>
+                <border type="none"/>
+                <children/>
+              </grid>
+              <grid id="b3b55" class="javax.swing.JMenuItem" binding="reportes6" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+                <constraints/>
+                <properties>
+                  <text value="Prestamos por carrera"/>
+                </properties>
+                <border type="none"/>
+                <children/>
+              </grid>
+            </children>
           </grid>
         </children>
       </grid>

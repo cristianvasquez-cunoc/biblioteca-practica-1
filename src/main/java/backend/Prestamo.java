@@ -58,4 +58,8 @@ public class Prestamo implements Serializable, Identificable {
     public String getIdentificador() {
         return codigoLibro + carnet + fecha.getTime();
     }
+
+    public EstadoPrestamo getEstado() {
+        return estado;
+    }
 }

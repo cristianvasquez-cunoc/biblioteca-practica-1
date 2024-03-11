@@ -108,7 +108,7 @@ public class RegistrarEstudiantePanel extends JPanel {
         fechaNacimientoField.setBorder(BorderFactory.createCompoundBorder(
                 fechaNacimientoField.getBorder(),
                 BorderFactory.createEmptyBorder(0, 10, 0, 0)));
-        fechaNacimientoFormato = new JLabel("Ingrese la fecha en formato yyyy-mm-dd");
+        fechaNacimientoFormato = new JLabel("Ingrese la fecha en formato yyyy-MM-dd");
         fechaNacimientoFormato.setFont(getFuenteConTamano(12));
 
         agregarBoton = new JButton("Agregar estudiante");
@@ -191,7 +191,7 @@ public class RegistrarEstudiantePanel extends JPanel {
         } catch (IllegalArgumentException e) {
             throw new RegistroFallidoMensajeException("No existe carrera con el código: " + codigoCarreraTexto);
         } catch (DateTimeParseException | ParseException e) {
-            throw new RegistroFallidoMensajeException("La fecha ingresada no es valida, por favor ingrese una en formato yyyy-mm-dd");
+            throw new RegistroFallidoMensajeException("La fecha ingresada no es valida, por favor ingrese una en formato yyyy-MM-dd");
         }
 
 
