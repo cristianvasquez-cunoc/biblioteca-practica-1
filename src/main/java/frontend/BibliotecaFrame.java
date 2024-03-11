@@ -12,7 +12,8 @@ import frontend.prestamos.FinalizarPrestamoPanel;
 import frontend.prestamos.RealizarPrestamoPanel;
 import frontend.registros.RegistrarEstudiantePanel;
 import frontend.registros.RegistrarLibroPanel;
-import frontend.reportes.Reportes1;
+import frontend.reportes.Reporte1;
+import frontend.reportes.Reporte2;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -142,7 +143,15 @@ public class BibliotecaFrame extends JFrame {
         reportes1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Reportes1 pane = new Reportes1(biblioteca);
+                Reporte1 pane = new Reporte1(biblioteca);
+                cambiarMainPanel(pane);
+            }
+        });
+
+        reportes2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Reporte2 pane = new Reporte2(biblioteca);
                 cambiarMainPanel(pane);
             }
         });

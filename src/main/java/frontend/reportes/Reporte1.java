@@ -2,49 +2,25 @@ package frontend.reportes;
 
 import backend.Biblioteca;
 import backend.Prestamo;
-import backend.lectortxt.RegistroFallido;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
-import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
-public class Reportes1 extends JPanel{
+public class Reporte1 extends Reporte{
 
-    private JLabel titulo;
-    private JTable table;
-    private JScrollPane jScrollPane;
-
-    private List<Prestamo> prestamos;
-    private Object[][] informacion;
-
-    private String[] columnas;
-
-    public Reportes1(Biblioteca biblioteca) {
-        setLayout(new BorderLayout());
-
-        titulo = new JLabel("Listado de préstamos de libros que deben ser entregados el día actual.");
-        titulo.setFont(new Font("Arial", Font.PLAIN, 24));
-        titulo.setBounds(20, 20, 100, 100);
-        add(titulo, BorderLayout.NORTH);
-
-        columnas = new String[]{"Fecha prestamo", "Estado", "Codigo del libro", "Carnet del estudiante"};
-        prestamos = biblioteca.getPrestamos();
+    public Reporte1(Biblioteca biblioteca) {
+        super(biblioteca, "Listado de préstamos de libros que deben ser entregados el día actual.");
         informacion = getInformacion();
         DefaultTableModel model = new DefaultTableModel(informacion, columnas);
-        table = new JTable(model);
-        TableColumnModel tableColumnModel = table.getColumnModel();
-        jScrollPane = new JScrollPane(table);
-        add(jScrollPane, BorderLayout.CENTER);
-
+        table.setModel(model);
     }
 
-    private Object[][] getInformacion() {
+    @Override
+    public Object[][] getInformacion() {
 
         List<Prestamo> prestamosFiltrados;
 
