@@ -39,5 +39,7 @@ public abstract class Reporte extends JPanel{
 
     }
 
+
+
     public abstract Object[][] getInformacion();
 }
